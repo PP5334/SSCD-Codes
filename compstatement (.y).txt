@@ -1,0 +1,39 @@
+%{
+#include <math.h>
+#include <ctype.h>
+#include <string.h>
+#include "lex.yy.c"
+%}
+%token ID NUM IF ELSE EQ
+%right '='
+%left '+' '-'
+%left '*' '/'
+%%
+start: IF '(' condi ')' '{' statement ';' '}' ELSE '{' statement ';' '}';
+condi: var '<' expr
+|var '>' expr
+|var EQ expr;
+statement: var '=' expr;
+expr: expr '+' expr
+|expr '-' expr
+|expr '*' expr
+|expr '/' expr
+|'(' expr ')'
+|var
+|NUM;var: ID;
+%%
+void main()
+{
+printf("Enter the Expression: ");
+yyparse();
+printf("Valid Expression\n");
+}
+int yywrap()
+{
+return 1;
+}
+int yyerror(char *s)
+{
+printf("%s\n",s);
+exit(0);
+}

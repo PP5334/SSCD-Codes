@@ -1,0 +1,32 @@
+%{
+#include <stdio.h>
+int flag=0;
+%}
+
+%token NUMBER
+%left '+' '-'
+%left '*' '/' '%'
+%left '(' ')'
+%%
+stmt: exp { printf("\nResult=%d\n",$$); return 0;};
+exp: exp '+' exp {$$=$1+$3;}
+|exp '-' exp {$$=$1-$3;}
+|exp '*' exp {$$=$1*$3;}
+|exp '/' exp {$$=$1/$3;}
+|'(' exp ')' {$$=$2;}	
+|NUMBER {$$=$1;};
+%%
+int yyerror(char *msg)
+{
+printf("Invalid Expression\n");
+flag=1;
+}
+main()
+{
+printf("Enter the Expression\n");
+yyparse();
+if(flag==0)
+{
+	printf("\nEntered Arithmetic Expression is Valid\n");
+}
+}
